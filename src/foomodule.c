@@ -85,6 +85,11 @@ static struct PyModuleDef foo_module = {
 // time, this function will get called.
 PyMODINIT_FUNC PyInit_foo(void)
 {
+    foo_FooType.tp_new = PyType_GenericNew;
+    if (PyType_Ready(&foo_FooType) < 0) {
+        return NULL;
+    }
+
     PyObject *m = PyModule_Create(&foo_module);
     if (m == NULL) {
         return NULL;
@@ -92,6 +97,8 @@ PyMODINIT_FUNC PyInit_foo(void)
 
     FooError = PyErr_NewException("foo.error", NULL, NULL);
     Py_INCREF(FooError);
+    Py_INCREF(&foo_FooType);
     PyModule_AddObject(m, "error", FooError);
+    PyModule_AddObject(m, "Foo", (PyObject *)&foo_FooType);
     return m;
 }
