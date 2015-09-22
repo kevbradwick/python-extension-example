@@ -27,8 +27,7 @@ static PyObject *sum(PyObject *self, PyObject *args) {
 
     for (int i = 0; i < total_args; i++) {
         // get the argument at the loop position i
-        PyObject *item = PyTuple_GetItem(args, i);
-        Py_INCREF(item);
+        PyObject *item = PyTuple_GetItem(args, i);  // this is a 'borrowed' reference
         // check if this is item is an int, if it is not then we should raise
         // an exception.
         if (!PyLong_Check(item)) {
@@ -44,9 +43,32 @@ static PyObject *sum(PyObject *self, PyObject *args) {
     return Py_BuildValue("i", total);
 }
 
+// greet simply returns a string that will say 'Hello [name]'.
+//
+// this is a demonstration of how keyword arguments are extracted and used.
+static PyObject *greet(PyObject *self, PyObject *args, PyObject *kwargs)
+{
+    char *name;
+
+    static char *kwlist[] = {"name", NULL};
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s", kwlist, &name)) {
+        PyErr_SetString(FooError, "Who should I be greeting?");
+        return NULL;
+    }
+
+    char message[100];
+    strcpy(message, "Hello ");
+    strcat(message, name);
+    strcat(message, "!");
+
+    return Py_BuildValue("s", message);
+}
+
 // build an array of Python method definitions
 static PyMethodDef FooMethods[] = {
-    {"sum", sum, METH_VARARGS, "Calculate the sum of all integers"},
+    {"sum", (PyCFunction) sum, METH_VARARGS, "Calculate the sum of all integers"},
+    {"greet", (PyCFunction) greet, METH_VARARGS | METH_KEYWORDS, "Print a hello greeting for [name]"},
     {NULL, NULL, 0, NULL}
 };
 

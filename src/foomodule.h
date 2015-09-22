@@ -7,4 +7,10 @@
 
 #include <Python.h>
 
+static PyObject *sum(PyObject *self, PyObject *args);
+
+static PyObject *greet(PyObject *self, PyObject *args, PyObject *kwargs);
+
+PyMODINIT_FUNC PyInit_foo(void);
+
 #endif //PYEXTENSION_FOOMODULE_H
