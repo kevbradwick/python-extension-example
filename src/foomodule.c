@@ -57,7 +57,10 @@ static PyObject *greet(PyObject *self, PyObject *args, PyObject *kwargs)
         return NULL;
     }
 
-    char message[100];
+    // buffer length is the length of the name, Hello\s! + one extra character
+    // so that the string can be null terminated
+    long str_len = strlen(name) + 7 + 1;
+    char message[str_len];
     strcpy(message, "Hello ");
     strcat(message, name);
     strcat(message, "!");
