@@ -1,6 +1,6 @@
 from distutils.core import setup, Extension
 
-module1 = Extension('foo', sources=['src/foomodule.c'])
+module1 = Extension('foo', sources=['src/foomodule.c',])
 setup(
     name='Foo',
     version='1.0',
